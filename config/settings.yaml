@@ -1,0 +1,8 @@
+retrieval:
+  top_k: 4
+  chunk_size: 800
+  chunk_overlap: 120
+paths:
+  vectorstore: rag/vectorstore
+  raw_docs: rag/data/sops/raw
+  clean_docs: rag/data/sops/clean
