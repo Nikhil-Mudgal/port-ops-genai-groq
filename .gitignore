@@ -1,0 +1,25 @@
+# macOS & system
+.DS_Store
+Thumbs.db
+
+# Python cache/venv
+__pycache__/
+*.pyc
+.venv/
+.env
+*.log
+
+# IDE/editor configs
+.vscode/
+.idea/
+
+# Streamlit local state
+.streamlit/
+
+# RAG data (raw SOPs + cleaned + vectorstore)
+rag/data/sops/raw/
+rag/data/sops/clean/
+rag/vectorstore/
+
+# Jupyter notebooks (if any checkpoints)
+.ipynb_checkpoints/
