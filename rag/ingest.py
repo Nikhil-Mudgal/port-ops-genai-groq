@@ -1,3 +1,12 @@
+# --- SQLite patch for Streamlit Cloud / Python 3.12+ ---
+try:
+    import pysqlite3  # type: ignore
+    import sys as _sys
+    _sys.modules["sqlite3"] = pysqlite3
+    _sys.modules["sqlite"] = pysqlite3
+except Exception:
+    pass
+# -------------------------------------------------------
 import os, glob, uuid, yaml
 from typing import List
 from tqdm import tqdm
