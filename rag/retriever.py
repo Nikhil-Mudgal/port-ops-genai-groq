@@ -6,6 +6,7 @@ try:
     _sys.modules["sqlite"] = pysqlite3
 except Exception:
     pass
+
 # rag/retriever.py
 import os, yaml, chromadb
 from typing import List, Dict, Any
