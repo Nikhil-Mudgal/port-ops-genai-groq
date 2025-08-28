@@ -1,6 +1,6 @@
 import yaml
 import streamlit as st
-from openai import OpenAI
+from groq import Groq
 import sys, pathlib
 PROJECT_ROOT = pathlib.Path(__file__).resolve().parents[1]
 if str(PROJECT_ROOT) not in sys.path:
@@ -177,10 +177,7 @@ if user_input:
         msgs = st.session_state.messages
 
     # 3) Call Groq and display assistant answer
-    client = OpenAI(
-        api_key=st.session_state.api_key,
-        base_url="https://api.groq.com/openai/v1",
-    )
+    client = Groq(api_key=st.session_state.api_key)
 
     with st.chat_message("assistant"):
         placeholder = st.empty()
