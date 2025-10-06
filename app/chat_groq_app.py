@@ -10,7 +10,7 @@ from rag.retriever import retrieve
 
 st.set_page_config(page_title="PortOps Chat", page_icon="⚓", layout="wide")
 
-MODEL = "llama3-8b-4096"
+MODEL = "mixtral-8x7b-32768"
 TEMPERATURE = 0.7
 MAX_TOKENS = 1000
 SYSTEM_PROMPT = """You are PortOps, an assistant for port operations.
