@@ -8,12 +8,12 @@ if str(PROJECT_ROOT) not in sys.path:
 from rag.retriever import retrieve
 
 
-st.set_page_config(page_title="PortOps Chat", page_icon="⚓", layout="wide")
+st.set_page_config(page_title="Contractor Chat", page_icon="⚓", layout="wide")
 
 MODEL = "llama-3.3-70b-versatile"
 TEMPERATURE = 0.7
 MAX_TOKENS = 1000
-SYSTEM_PROMPT = """You are PortOps, an assistant for port operations.
+SYSTEM_PROMPT = """You are Contractor, an assistant for FMCG Contracts.
 Answer using the retrieved SOP context below. If the context doesn’t contain the answer, say what’s missing.
 Respond with:
 **Summary**
@@ -44,7 +44,7 @@ def looks_like_email(e: str) -> bool:
 # ----------------------
 if "messages" not in st.session_state:
     st.session_state.messages = [
-        {"role": "assistant", "content": "Welcome! Port Ops is here to help you with all your Queries."}
+        {"role": "assistant", "content": "Welcome! Contractor is here to help you with all your Queries."}
     ]
 if "api_key" not in st.session_state:
     st.session_state.api_key = ""
@@ -124,7 +124,7 @@ st.markdown(
 # RAG controls
 _,_,_,col_rag = st.columns([1,1,1,1.35])
 with col_rag:
-    use_rag = st.toggle("🔎 RAG (use JNPT Specific Data)", value=True, help="When on, answers are grounded in ingested SOPs.")
+    use_rag = st.toggle("🔎 RAG (Use P&G and HUL contract agreements data)", value=True, help="When on, answers are grounded in ingested SOPs.")
 
 with st.sidebar:
     # Top content
@@ -141,7 +141,7 @@ for msg in st.session_state.messages:
         st.markdown(msg["content"])
 
 # ---- Input ----
-user_input = st.chat_input("Ask your port operations question…")
+user_input = st.chat_input("Ask your Seller and Buyer Contract related question…")
 
 if user_input:
     # 1) Save and render the user's question
