@@ -58,7 +58,7 @@ if "api_key_submitted" not in st.session_state:
 # ----------------------
 if not st.session_state.api_key_submitted:
     st.markdown(
-    "<h1 style='text-align: center;'>Contractor Chat</h1>",
+    "<h1 style='text-align: center;'>ContractMe Chat</h1>",
     unsafe_allow_html=True
 )
     st.subheader("Enter your details to start")
