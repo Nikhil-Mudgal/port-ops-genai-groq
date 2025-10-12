@@ -94,7 +94,7 @@ if not st.session_state.api_key_submitted:
 # ----------------------
 
 st.markdown(
-    "<h1 style='text-align:center; margin-top: 0;'>PortOps Chat</h1>",
+    "<h1 style='text-align:center; margin-top: 0;'>Contracty Chat</h1>",
     unsafe_allow_html=True,
 )
 st.markdown(
