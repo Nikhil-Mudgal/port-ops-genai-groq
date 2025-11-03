@@ -58,7 +58,7 @@ if "api_key_submitted" not in st.session_state:
 # ----------------------
 if not st.session_state.api_key_submitted:
     st.markdown(
-    "<h1 style='text-align: center;'>ContractMe Chat</h1>",
+    "<h1 style='text-align: center;'>Contractly Chat</h1>",
     unsafe_allow_html=True
 )
     st.subheader("Enter your details to start")
@@ -124,7 +124,7 @@ st.markdown(
 # RAG controls
 _,_,_,col_rag = st.columns([1,1,1,1.35])
 with col_rag:
-    use_rag = st.toggle("🔎 RAG (Use P&G and HUL contract agreements data)", value=True, help="When on, answers are grounded in ingested SOPs.")
+    use_rag = st.toggle("🔎 RAG (Use MS Contract Agreement Data)", value=True, help="When on, answers are grounded in ingested SOPs.")
 
 with st.sidebar:
     # Top content
@@ -141,7 +141,7 @@ for msg in st.session_state.messages:
         st.markdown(msg["content"])
 
 # ---- Input ----
-user_input = st.chat_input("Ask your Seller and Buyer Contract related question…")
+user_input = st.chat_input("Ask your Contract related question…")
 
 if user_input:
     # 1) Save and render the user's question
