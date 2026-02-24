@@ -8,18 +8,43 @@ if str(PROJECT_ROOT) not in sys.path:
 from rag.retriever import retrieve
 
 
-st.set_page_config(page_title="Contractor Chat", page_icon="⚓", layout="wide")
+st.set_page_config(page_title="EIA draft Generator", page_icon="⚓", layout="wide")
 
 MODEL = "llama-3.3-70b-versatile"
 TEMPERATURE = 0.7
-MAX_TOKENS = 1000
-SYSTEM_PROMPT = """You are Contractor, an assistant for FMCG Contracts.
-Answer using the retrieved SOP context below. If the context doesn’t contain the answer, say what’s missing.
-Respond with:
-**Summary**
-**Steps**
-**Exceptions/Notes**
-Cite sources in parentheses like (source: <filename>)."""
+MAX_TOKENS = 32768
+SYSTEM_PROMPT = """You are EnviroCompliance, an assistant for Environmental Impact Assessment (EIA) and Terms of Reference (ToR) analysis.
+Answer using only the retrieved regulatory and project context provided below.
+This context may include:
+Terms of Reference (ToRs)
+EIA Notification 2006
+EIA Reports
+If the context does not contain the answer, clearly state what information is missing.
+Response Format (Always Follow)
+ToR Requirement
+→ State the relevant ToR clause or requirement.
+Regulatory Basis
+→ Cite applicable clause/section from EIA Notification 2006.
+Explanation
+→ Explain the requirement in clear, professional language.
+Compliance Status
+→ Choose one:
+Fully Compliant
+Partially Compliant
+Non-Compliant
+Not Determinable
+Evidence from Documents
+→ Show supporting lines, data, or findings.
+Missing Information (if any)
+→ Specify what data or section is absent.
+Rules
+Use only retrieved context.
+Do not assume or invent information.
+Always cross-reference ToR + Notification + Report if available.
+Always cite sources like:
+(source: filename.pdf, section/page if available)
+If sources conflict, mention discrepancy.
+If ToR is not addressed in report, explicitly flag it.."""
 
 
 # ----------------------
@@ -44,7 +69,7 @@ def looks_like_email(e: str) -> bool:
 # ----------------------
 if "messages" not in st.session_state:
     st.session_state.messages = [
-        {"role": "assistant", "content": "Welcome! Contractor is here to help you with all your Queries."}
+        {"role": "assistant", "content": "Welcome! EIA Generator is here to help you with all your Queries."}
     ]
 if "api_key" not in st.session_state:
     st.session_state.api_key = ""
@@ -58,7 +83,7 @@ if "api_key_submitted" not in st.session_state:
 # ----------------------
 if not st.session_state.api_key_submitted:
     st.markdown(
-    "<h1 style='text-align: center;'>Contractly Chat</h1>",
+    "<h1 style='text-align: center;'>EIA Draft Generator</h1>",
     unsafe_allow_html=True
 )
     st.subheader("Enter your details to start")
@@ -94,7 +119,7 @@ if not st.session_state.api_key_submitted:
 # ----------------------
 
 st.markdown(
-    "<h1 style='text-align:center; margin-top: 0;'>Contracty Chat</h1>",
+    "<h1 style='text-align:center; margin-top: 0;'>EIA Draft Generator</h1>",
     unsafe_allow_html=True,
 )
 st.markdown(
@@ -124,7 +149,7 @@ st.markdown(
 # RAG controls
 _,_,_,col_rag = st.columns([1,1,1,1.35])
 with col_rag:
-    use_rag = st.toggle("🔎 RAG (Use MS Contract Agreement Data)", value=True, help="When on, answers are grounded in ingested SOPs.")
+    use_rag = st.toggle("🔎 RAG (Use EIA2006 and ToR Data)", value=True, help="When on, answers are grounded in ingested SOPs.")
 
 with st.sidebar:
     # Top content
@@ -141,7 +166,7 @@ for msg in st.session_state.messages:
         st.markdown(msg["content"])
 
 # ---- Input ----
-user_input = st.chat_input("Ask your Contract related question…")
+user_input = st.chat_input("Ask your EIA Draft related question…")
 
 if user_input:
     # 1) Save and render the user's question
