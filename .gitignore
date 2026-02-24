@@ -19,7 +19,7 @@ __pycache__/
 # RAG data (raw SOPs + cleaned + vectorstore)
 rag/data/sops/raw/
 rag/data/sops/clean/
-# rag/vectorstore/
+rag/vectorstore/
 
 # Jupyter notebooks (if any checkpoints)
 .ipynb_checkpoints/
