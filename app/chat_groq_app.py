@@ -12,7 +12,7 @@ st.set_page_config(page_title="EIA draft Generator", page_icon="⚓", layout="wi
 
 MODEL = "llama-3.3-70b-versatile"
 TEMPERATURE = 0.7
-MAX_TOKENS = 32768
+MAX_TOKENS = 32766
 SYSTEM_PROMPT = """You are EnviroCompliance, an assistant for Environmental Impact Assessment (EIA) and Terms of Reference (ToR) analysis.
 Answer using only the retrieved regulatory and project context provided below.
 This context may include:
