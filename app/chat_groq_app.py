@@ -2,7 +2,6 @@ import yaml
 import streamlit as st
 from groq import Groq
 import sys, pathlib
-
 PROJECT_ROOT = pathlib.Path(__file__).resolve().parents[1]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
@@ -13,8 +12,9 @@ st.set_page_config(page_title="EIA draft Generator", page_icon="⚓", layout="wi
 
 MODEL = "llama-3.3-70b-versatile"
 TEMPERATURE = 0.7
-MAX_TOKENS = 32766
-SYSTEM_PROMPT = """You are EnviroCompliance, an assistant for Environmental Impact Assessment (EIA) and Terms of Reference (ToR) analysis.
+MAX_TOKENS = 32768
+SYSTEM_PROMPT = """
+You are EnviroCompliance, an assistant for Environmental Impact Assessment (EIA) and Terms of Reference (ToR) analysis.
 Answer using only the retrieved regulatory and project context provided below.
 This context may include:
 Terms of Reference (ToRs)
@@ -45,7 +45,8 @@ Always cross-reference ToR + Notification + Report if available.
 Always cite sources like:
 (source: filename.pdf, section/page if available)
 If sources conflict, mention discrepancy.
-If ToR is not addressed in report, explicitly flag it.."""
+If ToR is not addressed in report, explicitly flag it..
+"""
 
 
 # ----------------------
@@ -61,21 +62,16 @@ def mask_email(e: str) -> str:
         masked_user = user[0] + "*" * max(1, len(user) - 2) + user[-1]
     return f"{masked_user}@{domain}"
 
-
 def looks_like_email(e: str) -> bool:
     e = e.strip()
     return "@" in e and "." in e.split("@")[-1] and " " not in e
-
 
 # ----------------------
 # Session State
 # ----------------------
 if "messages" not in st.session_state:
     st.session_state.messages = [
-        {
-            "role": "assistant",
-            "content": "Welcome! EIA Generator is here to help you with all your Queries.",
-        }
+        {"role": "assistant", "content": "Welcome! EIA Generator is here to help you with all your Queries."}
     ]
 if "api_key" not in st.session_state:
     st.session_state.api_key = ""
@@ -89,20 +85,14 @@ if "api_key_submitted" not in st.session_state:
 # ----------------------
 if not st.session_state.api_key_submitted:
     st.markdown(
-        "<h1 style='text-align: center;'>EIA Draft Generator</h1>",
-        unsafe_allow_html=True,
-    )
+    "<h1 style='text-align: center;'>EIA Draft Generator</h1>",
+    unsafe_allow_html=True
+)
     st.subheader("Enter your details to start")
 
     with st.form("api_key_form", clear_on_submit=False):
-        email = st.text_input(
-            "Email ID", value=st.session_state.user_email, placeholder="you@company.com"
-        )
-        api_key = st.text_input(
-            "Groq API Key (starts with gsk_…)",
-            type="password",
-            value=st.session_state.api_key,
-        )
+        email = st.text_input("Email ID", value=st.session_state.user_email, placeholder="you@company.com")
+        api_key = st.text_input("Groq API Key (starts with gsk_…)", type="password", value=st.session_state.api_key)
         submit = st.form_submit_button("Submit")
 
     if submit:
@@ -121,9 +111,7 @@ if not st.session_state.api_key_submitted:
             st.session_state.user_email = email.strip()
             st.session_state.api_key = api_key.strip()
             st.session_state.api_key_submitted = True
-            st.success(
-                f"✅ Details saved successfully for **{mask_email(st.session_state.user_email)}**. You can start chatting now."
-            )
+            st.success(f"✅ Details saved successfully for **{mask_email(st.session_state.user_email)}**. You can start chatting now.")
             st.rerun()
 
     st.stop()
@@ -161,13 +149,9 @@ st.markdown(
     unsafe_allow_html=True,
 )
 # RAG controls
-_, _, _, col_rag = st.columns([1, 1, 1, 1.35])
+_,_,_,col_rag = st.columns([1,1,1,1.35])
 with col_rag:
-    use_rag = st.toggle(
-        "🔎 RAG (Use EIA2006 and ToR Data)",
-        value=True,
-        help="When on, answers are grounded in ingested SOPs.",
-    )
+    use_rag = st.toggle("🔎 RAG (Use EIA2006 and ToR Data)", value=True, help="When on, answers are grounded in ingested SOPs.")
 
 with st.sidebar:
     # Top content
@@ -206,15 +190,11 @@ if user_input:
 
             # System + user with context appended
             msgs.append({"role": "system", "content": SYSTEM_PROMPT})
-            msgs += st.session_state.messages[
-                :-1
-            ]  # prior history (without the last user msg we already have)
-            msgs.append(
-                {
-                    "role": "user",
-                    "content": f"{user_input}\n\n---\nRETRIEVED SOP CONTEXT:\n{context_block}",
-                }
-            )
+            msgs += st.session_state.messages[:-1]  # prior history (without the last user msg we already have)
+            msgs.append({
+                "role": "user",
+                "content": f"{user_input}\n\n---\nRETRIEVED SOP CONTEXT:\n{context_block}"
+            })
         else:
             # No context found → still set system prompt that asks to be honest about missing info
             msgs.append({"role": "system", "content": SYSTEM_PROMPT})
